@@ -9,7 +9,7 @@ const playAgainButton = document.querySelector(".play-again");
 const word = "magnolia";
 const guessedLettersArray = [];
 
-const placeholders = function(word){
+let placeholders = function(word){
     const placeHoldersArray = [];
     for(let i=1; i<=word.length; i++){
 placeHoldersArray.push("●");
@@ -19,6 +19,8 @@ return placeHoldersArray;
 }
 
 console.log(placeholders(word));
+const currentWord = placeholders(word);
+console.log(currentWord)
 
 guessButton.addEventListener("click", function(e){
     e.preventDefault();
@@ -60,7 +62,50 @@ const makeGuess = function(letter){
         return;
     }else {
         guessedLettersArray.push(letter);
+        showGuessedLetters(guessedLettersArray);
         console.log(guessedLettersArray);
     }
 }
 
+const showGuessedLetters = function(guessedLettersArray){
+    guessedLetters.innerHTML="";
+    for (let i=1; i<=guessedLettersArray.length; i++){
+        const li = document.createElement("li");
+        li.innerText =`${guessedLettersArray[i-1]}`;
+        console.log(li.innerText);
+        guessedLetters.append(li);
+    }
+    updateWordInProgress(guessedLettersArray);
+    return;
+}
+
+const updateWordInProgress = function(guessedLettersArray){
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    let gamePlaceholders = placeholders(word);
+    console.log(wordArray);
+    console.log(gamePlaceholders);
+    for (let i=0; i < guessedLettersArray.length; i++){
+        console.log(guessedLettersArray[i]);
+        console.log(wordArray.includes(guessedLettersArray[i]));
+        //this only finds the first index not subsequent indices need to check multiple times
+        while (wordArray.includes(guessedLettersArray[i])){
+            const letterNumber = wordArray.indexOf(guessedLettersArray[i]);
+            console.log(`This is what letterNumber ${letterNumber} returns.`);
+            gamePlaceholders[letterNumber]=guessedLettersArray[i];
+            console.log(gamePlaceholders);
+            wordInProgress.innerText=`${gamePlaceholders.join('')}`;
+            wordArray[letterNumber]="●";
+        };
+        let currentGuessedWord = gamePlaceholders.join('')
+        //console.log(`This is the current guessed word ${currentGuessedWord}`);
+        if (currentGuessedWord===wordUpper){
+            console.log("You win")
+            messages.classList.add("win");
+            messages.innerHTML=`<p class="highlight">You guessed correct the word! Congrats!</p>`;
+            guess.disabled = true;
+        }
+    }
+  
+    }
+    
