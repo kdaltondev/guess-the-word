@@ -10,27 +10,27 @@ let word = "magnolia";
 const guessedLettersArray = [];
 let remainingGuesses = 8;
 
-
 /*This gets a list of random words and then chooses one for the game*/
-const getWord = async function(){
-    const resp = await fetch('https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt');
-    const data = await resp.text();
-    console.log(data);
-    const randomWordArray = data.split("\n");
-    console.log(randomWordArray);
-    const randomNumber = Math.floor((Math.random()*randomWordArray.length));
-    const randomWord = randomWordArray[randomNumber];
-    word = randomWord.trim();
-    console.log(randomWord);
-    const currentWord = placeholders(randomWord);
-
-}
+const getWord = async function () {
+  const resp = await fetch(
+    "https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt"
+  );
+  const data = await resp.text();
+  console.log(data);
+  const randomWordArray = data.split("\n");
+  console.log(randomWordArray);
+  const randomNumber = Math.floor(Math.random() * randomWordArray.length);
+  const randomWord = randomWordArray[randomNumber];
+  word = randomWord.trim();
+  console.log(randomWord);
+  const currentWord = placeholders(randomWord);
+};
 getWord();
 
 /*Creates the placeholder array for the word that displays on the screen*/
 let placeholders = function (word) {
-    const wordUpper = word.toUpperCase();
-    const placeHoldersArray=[];
+  const wordUpper = word.toUpperCase();
+  const placeHoldersArray = [];
   for (let i = 1; i <= word.length; i++) {
     placeHoldersArray.push("●");
   }
@@ -52,15 +52,15 @@ guessButton.addEventListener("click", function (e) {
 const playerInput = function (input) {
   const acceptedLetter = /[a-zA-Z]/;
   if (input === "") {
-    console.log("Please enter a single letter");
+    messages.innerText = `Please enter a single letter`;
     guess.value = "";
     return;
   } else if (input.length > 1) {
-    console.log("Please enter a single letter not multiple letters");
+    messages.innerText = `Please enter a single letter not multiple letters`;
     guess.value = "";
     return;
   } else if (!input.match(acceptedLetter)) {
-    console.log("Please enter a letter - not a number or a symbol");
+    messages.innerText = `Please enter a letter - not a number or a symbol`;
     guess.value = "";
     return;
   } else if (input != undefined) {
@@ -71,20 +71,19 @@ const playerInput = function (input) {
   }
 };
 
-
 const makeGuess = function (letter) {
   letter = letter.toUpperCase();
   if (guessedLettersArray.includes(letter)) {
-    console.log("You already guessed that letter");
+    messages.innerText=`You already guessed that letter`;
     return;
   } else {
     guessedLettersArray.push(letter);
     wordUpper = word.toUpperCase();
     console.log(wordUpper.includes(letter));
     if (wordUpper.includes(letter) == true) {
-      console.log("The word contains this letter");
+      messages.innerText = `The word contains ${letter}`;
     } else {
-      console.log("The word is amazing.");
+      messages.innerText = `The word does not contain ${letter}`;
       guessesRemaining();
     }
   }
@@ -105,13 +104,12 @@ const showGuessedLetters = function (guessedLettersArray) {
 };
 
 const updateWordInProgress = function (guessedLettersArray) {
- const wordUpper = word.toUpperCase();
+  const wordUpper = word.toUpperCase();
   const wordArray = wordUpper.split("");
   let gamePlaceholders = placeholders(word);
   console.log(gamePlaceholders);
   for (let i = 0; i < guessedLettersArray.length; i++) {
     console.log(guessedLettersArray[i]);
-    
 
     //this only finds the first index not subsequent indices need to check multiple times
 
@@ -120,7 +118,7 @@ const updateWordInProgress = function (guessedLettersArray) {
       gamePlaceholders[letterNumber] = guessedLettersArray[i];
       console.log(gamePlaceholders);
       wordInProgress.innerText = `${gamePlaceholders.join("")}`;
-     wordArray[letterNumber] = "●";
+      wordArray[letterNumber] = "●";
     }
     let currentGuessedWord = gamePlaceholders.join("");
     //console.log(`This is the current guessed word ${currentGuessedWord}`);
@@ -138,10 +136,8 @@ const guessesRemaining = function () {
   remainingGuessesParagraph.innerText = `You have ${remainingGuesses} guesses remaining`;
   if (remainingGuesses < 1) {
     guess.disabled = true;
-    console.log(`You have no remaining guesses`);
+    messages.innerText = `You ran out of guesses!`;
   } else {
     console.log(`You have ${remainingGuesses} guesses remaining`);
   }
 };
-
-
