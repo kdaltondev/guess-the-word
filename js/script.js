@@ -7,7 +7,7 @@ const remainingGuessesSpan = document.querySelector("span");
 const messages = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 let word = "magnolia";
-const guessedLettersArray = [];
+let guessedLettersArray = [];
 let remainingGuesses = 8;
 
 /*This gets a list of random words and then chooses one for the game*/
@@ -127,6 +127,7 @@ const updateWordInProgress = function (guessedLettersArray) {
       messages.classList.add("win");
       messages.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`;
       guess.disabled = true;
+      startOver();
     }
   }
 };
@@ -137,7 +138,31 @@ const guessesRemaining = function () {
   if (remainingGuesses < 1) {
     guess.disabled = true;
     messages.innerText = `You ran out of guesses!`;
+    startOver();
   } else {
     console.log(`You have ${remainingGuesses} guesses remaining`);
   }
 };
+
+const startOver = function(){
+  guessButton.classList.add("hide");
+  remainingGuessesParagraph.classList.add("hide");
+  guessedLetters.classList.add("hide");
+  playAgainButton.classList.remove("hide");
+
+}
+
+playAgainButton.addEventListener("click", function(){
+  messages.classList.remove("win");
+  guessedLettersArray=[];
+  guessedLetters.innerText="";
+  messages.innerText="";
+  remainingGuesses=8;
+  remainingGuessesParagraph.innerText = `You have ${remainingGuesses} guesses remaining`;
+  playAgainButton.classList.add("hide");
+  guessButton.classList.remove("hide");
+  remainingGuessesParagraph.classList.remove("hide");
+  guessedLetters.classList.remove("hide");
+  guess.disabled=false;
+  getWord();
+})
